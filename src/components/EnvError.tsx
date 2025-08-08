@@ -76,7 +76,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anonima_supabase`}
                   2. Crea un nuevo proyecto o selecciona uno existente
                 </p>
                 <p className="text-sm text-gray-600">
-                  3. Ve a <strong>Settings > API</strong> en el dashboard
+                  3. Ve a <strong>Settings API</strong> en el dashboard
                 </p>
                 <p className="text-sm text-gray-600">
                   4. Copia la <strong>Project URL</strong> y la <strong>anon public key</strong>
