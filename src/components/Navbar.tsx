@@ -2,18 +2,29 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useAuth } from '@/lib/auth-context';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, loading, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setIsMenuOpen(false);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
-    <nav className="bg-orange-500 shadow-lg border-b border-gray-200">
+    <nav className="bg-pink-500 shadow-lg border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo/Brand */}
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-white">Latiditos</span>
+              <span className="text-xl font-bold text-white font-serif">Latiditos</span>
             </Link>
           </div>
 
@@ -31,26 +42,45 @@ export default function Navbar() {
             >
               Mensajes
             </Link>
-            <Link 
-              href="/login" 
-              className="text-white hover:text-orange-200 p-2 rounded-full hover:bg-orange-600 transition-colors duration-200"
-              title="Iniciar sesión"
-            >
-              <svg 
-                className="w-6 h-6" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
-                />
-              </svg>
-            </Link>
+            {!loading && (
+              user ? (
+                <div className="flex items-center space-x-4">
+                  <Link 
+                    href="/panel" 
+                    className="text-white hover:text-orange-200 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  >
+                    Panel
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-white hover:text-orange-200 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  >
+                    Cerrar Sesión
+                  </button>
+                </div>
+              ) : (
+                <Link 
+                  href="/login" 
+                  className="text-white hover:text-orange-200 p-2 rounded-full hover:bg-orange-600 transition-colors duration-200"
+                  title="Iniciar sesión"
+                >
+                  <svg 
+                    className="w-6 h-6" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                    />
+                  </svg>
+                </Link>
+              )
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -93,29 +123,49 @@ export default function Navbar() {
               >
                 Mensajes
               </Link>
-              <Link 
-                href="/login" 
-                className="text-white hover:text-orange-200 block px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <div className="flex items-center">
-                  <svg 
-                    className="w-5 h-5 mr-2" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24" 
-                    xmlns="http://www.w3.org/2000/svg"
+              {!loading && (
+                user ? (
+                  <>
+                    <Link 
+                      href="/panel" 
+                      className="text-white hover:text-orange-200 block px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Panel
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="text-white hover:text-orange-200 block w-full text-left px-3 py-2 rounded-md text-base font-medium"
+                    >
+                      Cerrar Sesión
+                    </button>
+                  </>
+                ) : (
+                  <Link 
+                    href="/login" 
+                    className="text-white hover:text-orange-200 block px-3 py-2 rounded-md text-base font-medium"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
-                    />
-                  </svg>
-                  Iniciar sesión
-                </div>
-              </Link>
+                    <div className="flex items-center">
+                      <svg 
+                        className="w-5 h-5 mr-2" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24" 
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth={2} 
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
+                        />
+                      </svg>
+                      Iniciar sesión
+                    </div>
+                  </Link>
+                )
+              )}
             </div>
           </div>
         )}
